@@ -11,6 +11,8 @@ export const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+
+
   const handleChange = (e) => {
     setText(e.target.value);
   };
@@ -25,17 +27,10 @@ export const Todo = () => {
       title: text,
     };
 
+
     try {
       setIsLoading(true);
-      const response = await axios.post({
-        url: 'http://localhost:5555/create-task',
-        headers: {
-          'Authorization': '',
-        },
-        newData
-      }
-        
-      );
+      const response = await axios.post('http://localhost:5555/create-task', newData);
 
       if (response.data) {
         setIsLoading(false);

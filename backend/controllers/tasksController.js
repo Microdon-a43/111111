@@ -3,7 +3,11 @@ import Task from '../models/tasksModel.js';
 export const taskController = {
   createTask: async (req, res) => {
     try {
-      const newTask = await Task.create(req.body);
+      const newTask = await Task.create({
+        ...req.body,
+        userID: req.user[0]._id,
+        authorsName: req.user[0].username
+      });
 
       res.json({
         message: 'Task was created successfully',
@@ -16,7 +20,7 @@ export const taskController = {
   getAllTasks: async (req, res) => {
     try {
       const tasks = await Task.find();
-      res.json({tasks});
+      res.json({ tasks });
     } catch (error) {
       res.status(500).json({ msg: 'При выполнении запроса произошла ошибка' });
     }
@@ -48,7 +52,7 @@ export const taskController = {
         });
       res.json({
         message: 'Задача была успешно обновлена',
-        task
+        task,
       });
     } catch (error) {}
   },
@@ -66,9 +70,9 @@ export const taskController = {
   },
 
   deleteAllTasks: async (req, res) => {
-    await Task.deleteMany({})
+    await Task.deleteMany({});
     res.json({
       message: 'Удаление прошло успешно',
-    })
-  }
+    });
+  },
 };

@@ -31,7 +31,7 @@ export const userCtrl = {
     try {
       const user = await User.findOne({ username: req.body.username });
       if (!user)
-        return res.json({
+        return res.status(401).json({
           message: 'Неверное имя пользователя или пароль',
         });
 
@@ -44,22 +44,22 @@ export const userCtrl = {
       const accessToken = jwt.sign(
         { _id: user.id, username: user.username },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '30m' }
+        { expiresIn: '1d' }
       );
 
-      res.cookie('accessToken', accessToken, {
+      return res.cookie('accessToken', accessToken, {
         httpOnly: true,
-        maxAge: 60 * 60 * 24 * 30,
-        path: '/api/accessToken',
-      });
-
-      return res.status(200).json({
-        message: 'Вы успешно вошли в личный кабинет',
+      }).status(200).json({
+        message: "Logged in successfully 😊 👌" ,
         user,
-        accessToken,
+        accessToken
       });
     } catch (error) {
-      console.log('dfsdfgfgdfbdb');
+      console.log('error');
     }
   },
+  getAllUsers: async(req, res) => {
+    const users = await User.find()
+    res.json(users)
+  }
 };
